@@ -16,7 +16,9 @@ function! SyncGitStatusSymbolColor()
   if !exists('b:git_dir')
     return
   endif
-  let git_dir_is_dirty = system("git status -s --ignore-submodules=dirty")
+  let base_dir = b:git_dir[0 : len(b:git_dir)-5]
+  let cmd = "cd ".base_dir." && git status -s --ignore-submodules=dirty"
+  let git_dir_is_dirty = system(cmd)
   if git_dir_is_dirty != ''
     hi User9 ctermfg=232 ctermbg=red cterm=reverse,bold
   else
