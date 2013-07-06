@@ -1,8 +1,5 @@
 autocmd VimEnter,BufEnter,BufWritePost * call SyncGitStatusSymbolColor()
 
-" sync git status symbol color
-hi User9 ctermfg=232 ctermbg=white cterm=reverse
-
 " git status symbol
 function! GitStatusSymbol()
   if !exists('b:git_dir')
@@ -19,10 +16,19 @@ function! SyncGitStatusSymbolColor()
   let base_dir = b:git_dir[0 : len(b:git_dir)-5]
   let cmd = "cd ".base_dir." && git status -s --ignore-submodules=dirty"
   let git_dir_is_dirty = system(cmd)
-  if git_dir_is_dirty != ''
-    hi User9 ctermfg=232 ctermbg=red cterm=reverse,bold
+  let is_reversed = synIDattr(synIDtrans(hlID('StatusLineNC')), 'reverse')
+  if is_reversed
+    let current_fg = synIDattr(synIDtrans(hlID('StatusLineNC')), 'bg')
+    let current_bg = synIDattr(synIDtrans(hlID('StatusLineNC')), 'fg')
   else
-    hi User9 ctermfg=232 ctermbg=white cterm=reverse
+    let current_fg = synIDattr(synIDtrans(hlID('StatusLineNC')), 'fg')
+    let current_bg = synIDattr(synIDtrans(hlID('StatusLineNC')), 'bg')
+  endif
+  if git_dir_is_dirty != ''
+    exec 'hi User9 ctermfg=red ctermbg='.current_bg.' cterm=bold'
+  else
+    exec 'hi User9 ctermfg='.current_fg.' ctermbg='.current_bg.' cterm=bold'
   endif
 endfunction
 
+call SyncGitStatusSymbolColor()
