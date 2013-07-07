@@ -1,4 +1,7 @@
-autocmd VimEnter,BufEnter,BufWritePost * call SyncGitStatusSymbolColor()
+augroup GitSymbol
+  autocmd!
+  autocmd VimEnter,BufEnter,BufWritePost * call SyncGitStatusSymbolColor()
+augroup END
 
 " git status symbol
 function! GitStatusSymbol()
