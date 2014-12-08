@@ -12,7 +12,7 @@ function! GitStatusSymbol()
   if !exists('b:git_dir')
     return ''
   endif
-  return '⚡'
+  return '⌁'
 endfunction
 
 " sync git status symbol color
