@@ -41,19 +41,17 @@ function! SyncGitStatusSymbolColor()
     let current_bg = 'NONE'
   endif
 
-  if git_dir_is_dirty != ''
-    if &termguicolors
+  try
+    if git_dir_is_dirty != ''
       exec 'hi User9 guifg=red guibg='.current_bg
-    else
       exec 'hi User9 ctermfg=red ctermbg='.current_bg
-    endif
-  else
-    if &termguicolors
-      exec 'hi User9 guifg='.current_fg.' guibg='.current_bg
     else
+      exec 'hi User9 guifg='.current_fg.' guibg='.current_bg
       exec 'hi User9 ctermfg='.current_fg.' ctermbg='.current_bg
     endif
-  endif
+  catch
+    " we are doing this to avoid to determine if vim has true color support
+  endtry
 endfunction
 
 call SyncGitStatusSymbolColor()
