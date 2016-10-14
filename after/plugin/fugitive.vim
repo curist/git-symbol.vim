@@ -33,17 +33,27 @@ function! SyncGitStatusSymbolColor()
     let current_bg = synIDattr(synIDtrans(hlID('StatusLine')), 'bg')
   endif
 
-  try
-    if git_dir_is_dirty != ''
-      exec 'hi User9 guifg=red guibg='.current_bg.' gui=bold'
-      exec 'hi User9 ctermfg=red ctermbg='.current_bg.' cterm=bold'
+  if empty(current_fg)
+    let current_fg = 'NONE'
+  endif
+
+  if empty(current_bg)
+    let current_bg = 'NONE'
+  endif
+
+  if git_dir_is_dirty != ''
+    if &termguicolors
+      exec 'hi User9 guifg=red guibg='.current_bg
     else
-      exec 'hi User9 guifg='.current_fg.' guibg='.current_bg.' gui=bold'
-      exec 'hi User9 ctermfg='.current_fg.' ctermbg='.current_bg.' cterm=bold'
+      exec 'hi User9 ctermfg=red ctermbg='.current_bg
     endif
-  catch
-    " do nothing
-  endtry
+  else
+    if &termguicolors
+      exec 'hi User9 guifg='.current_fg.' guibg='.current_bg
+    else
+      exec 'hi User9 ctermfg='.current_fg.' ctermbg='.current_bg
+    endif
+  endif
 endfunction
 
 call SyncGitStatusSymbolColor()
